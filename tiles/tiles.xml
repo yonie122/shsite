@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+"-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"
+"http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+
+<tiles-definitions>
+<!-- jsp파일을 조립하여 layoutAll.jsp에 연결하는 부분 -->
+<definition name="default_layout" template="/WEB-INF/layout/layoutAll.jsp" >
+<put-attribute name="main" value=""/>
+<put-attribute name="top" value="/WEB-INF/layout/top.jsp" />
+<put-attribute name="include" value="/WEB-INF/layout/include.jsp" />
+<put-attribute name="left" value="/WEB-INF/layout/left.jsp" />
+<put-attribute name="footer" value="/WEB-INF/layout/footer.jsp" />
+</definition>
+
+<!-- 개별 뷰 -->
+<definition name="home" extends="default_layout">
+<put-attribute name="main" value="/WEB-INF/views/home.jsp" />
+</definition>
+
+<!-- 개별 뷰 -->
+<definition name="anonyListPage" extends="default_layout">
+<put-attribute name="main" value="/WEB-INF/views/Community/anonymous/anonyListPage.jsp" />
+</definition>
+
+
+<!-- views 바로 아래에 있는 파일들을 찾는 wildcard -->
+<definition name="/*" extends="default_layout">
+<put-attribute name="main" value="/WEB-INF/views/{1}.jsp" />
+</definition>
+
+<!-- Community 폴더 안의 파일들을 찾는 wildcard -->
+<definition name="Community/*" extends="default_layout">
+<put-attribute name="main" value="/WEB-INF/views/Community/{1}.jsp" />
+</definition>
+
+	<!-- anonymous 폴더 안의 파일들을 찾는 wildcard -->
+	<definition name="Community/anonymous/*"
+		extends="default_layout">
+<put-attribute name="main" value="/WEB-INF/views/Community/anonymous/{1}.jsp" />
+</definition>
+
+<!-- view 아래의 폴더 안의 파일을 찾는 wildcard  -->
+<definition name="*/*" extends="default_layout">
+<put-attribute name="main" value="/WEB-INF/views/Community/{1}/{2}.jsp" />
+</definition>
+
+<!-- view 아래의 폴더 안의 파일을 찾는 wildcard  -->
+<definition name="*/*" extends="default_layout">
+<put-attribute name="main" value="/WEB-INF/views/{1}/{2}.jsp" />
+</definition>
+
+<!-- view 아래의 폴더 안의 파일을 찾는 wildcard  -->
+<definition name="*/*/*" extends="default_layout">
+<put-attribute name="main" value="/WEB-INF/views/{1}/{2}/{3}.jsp" />
+</definition>
+
+		<definition name="Community/notice/*"
+		extends="default_layout">
+		<put-attribute name="main"
+			value="/WEB-INF/views/Community/notice/{1}.jsp" />
+	</definition>
+
+	<!-- view 아래의 폴더 안의 파일을 찾는 wildcard -->
+		<definition name="Community/notice/*/*"
+		extends="default_layout">
+		<put-attribute name="main"
+			value="/WEB-INF/views/Community/notice/{1}/{2}.jsp" />
+	</definition>
+
+	<definition name="Community/Free/board/*"
+		extends="default_layout">
+		<put-attribute name="main"
+			value="/WEB-INF/views/Community/Free/board/{1}.jsp" />
+	</definition>
+
+	<!-- view 아래의 폴더 안의 파일을 찾는 wildcard -->
+	<definition name="Community/Free/board/*/*"
+		extends="default_layout">
+		<put-attribute name="main"
+			value="/WEB-INF/views/Community/Free/{1}/{2}.jsp" />
+	</definition>
+
+</tiles-definitions>

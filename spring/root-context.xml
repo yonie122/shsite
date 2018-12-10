@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<!-- properties를 읽어오겠다는 빈 객체 -->
+		<property name="location">
+			<value>classpath:jdbc.properties</value>
+		</property>
+	</bean>
+	
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${DB_DRIVER}" />
+		<property name="url" value="${DB_URL}" />
+		<property name="username" value="${DB_USER}" />
+		<property name="password" value="${DB_PASSWORD}" />
+	</bean>
+
+	<!-- SqlSession -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="mapperLocations" value="classpath:com/bit/myapp/dao/*.xml"/>
+		<property name="configLocation" value="classpath:/mybatis-config.xml" />
+	</bean>
+	
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.bit.myapp.dao"/>
+	</bean>
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	</bean>
+	
+	<tx:annotation-driven transaction-manager="transactionManager" />
+</beans>
