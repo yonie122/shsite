@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bit.myapp.dao.NoticeMapper">
+	<resultMap type="com.bit.myapp.domain.Notice" id="Notice">
+		<result property="noticePostNo" column="NOTICEPOSTNO"
+			javaType="int" />
+		<result property="noticePtagName" column="NOTICEPTAGNAME"
+			javaType="string" />
+		<result property="noticeTitle" column="NOTICETITLE"
+			javaType="string" />
+		<result property="noticePdetail" column="NOTICEPDETAIL"
+			javaType="string" />
+		<result property="noticePostWriter" column="NOTICEPOSTWRITER"
+			javaType="string" />
+		<result property="noticePostDate" column="NOTICEPOSTDATE"
+			javaType="java.sql.Date" jdbcType="DATE" />
+		<result property="noticeModiDate" column="NOTICEMODIDATE"
+			javaType="java.sql.Date" jdbcType="DATE" />
+		<result property="noticePostNv" column=" NOTICEPOSTNV"
+			javaType="int" />
+		<result property="noticePostLike" column="NOTICEPOSTLIKE"
+			javaType="int" />
+		<result property="noticePostNvUp" column=" NOTICEPOSTNV"
+			javaType="int" />
+	</resultMap>
+
+<select id="list" resultType="com.bit.myapp.domain.Notice"> select NOTICEPOSTNO, NOTICEPTAGNAME, 
+
+		NOTICETITLE, NOTICEPOSTWRITER, NOTICEPOSTDATE, NOTICEPOSTNV, NOTICEPOSTLIKE 
+
+		from noticeboard ORDER BY 1 DESC </select>
+
+ 
+
+	<sql id="search">
+
+			<!-- 작성자로 찾기 -->
+
+			<if test="searchType == 'w'.toString()">
+
+				NOTICEPOSTWRITER like ('%${keyword}%')
+
+			</if>
+
+			<!-- 제목+내용으로 찾기 -->
+
+			<if test="searchType == 'tc'.toString()">
+
+				noticeTitle like ('%${keyword}%') OR
+
+				NOTICEPDETAIL
+
+				like
+
+				('%${keyword}%')
+
+			</if>
+
+	</sql>
+
+	
+
+	<sql id="noticePtagName">
+
+	<if test="noticePtagName== 'notice'.toString()">
+
+	'공지'
+
+	</if>
+
+	<if test="noticePtagName == 'etc'.toString()">
+
+	'기타'
+
+	</if>
+
+	</sql>
+
+ 
+
+	
+
+	<select id="searchList" resultType="com.bit.myapp.domain.Notice">
+
+			select *
+
+		from noticeboard where
+
+ 
+
+		<include refid="search"></include>
+
+		order by noticePostNo desc
+
+	</select>
+
+ 
+
+	<!-- 검색시 게시글 수 <select id="countPost" resultType="int"> select count(*) 
+
+		from noticeboard <include refid="search"></include> </select> -->
+
+ 
+
+ 
+
+	<insert id="write" parameterType="com.bit.myapp.domain.Notice">
+
+		insert into noticeboard values(
+
+		noticeseq.NEXTVAL, <include refid="noticePtagName"></include> ,#{noticeTitle}, #{noticePdetail},'관리자',
+
+		sysdate, sysdate, 0, 0)
+
+	</insert>
+	
+	
+	<select id="contentView" resultType="com.bit.myapp.domain.Notice" parameterType="int">
+		select
+		* from noticeboard where NOTICEPOSTNO = #{noticePostNo}
+	</select>
+	<!-- 글삭제 -->
+	<delete id="delete">
+		delete from noticeboard where noticepostno =
+		#{noticePostNo}
+	</delete>
+
+	<!-- 글수정 -->
+	<update id="modify" parameterType="com.bit.myapp.domain.Notice">
+		update noticeboard
+		<set>
+			<if test="noticeTitle  != null and noticeTitle  !=''">NOTICETITLE=#{noticeTitle}, </if>
+			<if test="noticePdetail != null and noticePdetail != '' "> NOTICEPDETAIL=#{noticePdetail} </if>
+		</set>
+		, noticeModiDate=sysdate where noticepostno = #{noticePostNo}
+	</update>
+
+	<!-- 조회수 -->
+	<update id="noticePostNvUp" parameterType="int">
+		update noticeboard
+		set
+		noticePostNv = noticePostNv + 1 where noticepostno = #{noticePostNo}
+	</update>
+
+	<!-- 파일첨부 <insert id="noticeAttach"> insert into noticeattach values (#{uploadfilename}, 
+		noticeattachseq.nextval, sysdate) </insert> -->
+
+
+</mapper>

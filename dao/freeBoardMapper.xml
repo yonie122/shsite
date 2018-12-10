@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+
+
+  <mapper namespace ="com.bit.myapp.dao.FreeBoardMapper">
+  		
+  		<resultMap type="com.bit.myapp.domain.FreeBoard" id="FreeBoard">
+		<result property="postNo" column="postno" javaType="int" />
+		<result property="ptagName" column="ptagname" javaType="string" />
+		<result property="ptitle" column="ptitle" javaType="string"/>
+		<result property="pdetail" column="pdetail" javaType="string"  />
+		<result property="writer" column="writer" javaType="string"/>
+		<result property="postDate" column="postdate" javaType="java.sql.Date"  jdbcType="DATE"/>
+		<result property="modiDate" column="modidate" javaType="java.sql.Date"  jdbcType="DATE"/>
+		<result property="postNv" column="postnv" javaType="int" />
+		<result property="likeCount" column="likeCount" javaType="int" />
+	</resultMap>
+	
+	
+	
+	 
+  	
+<!--   		<insert id="insertFree" parameterType="FreeBoard">
+		insert into FreeBoard (postno,ptagname,ptitle,pdetail,writer)
+		values
+		(#{postNo},#{ptagName},#{ptitle},#{pdetail},#{writer})
+	</insert> -->
+	
+	  		<insert id="insertFree" parameterType="com.bit.myapp.domain.FreeBoard">
+		insert into FreeBoard (postno,ptagname,ptitle,pdetail,writer)
+		values
+		(AAA.NEXTVAL,#{ptagName},#{ptitle},#{pdetail},#{writer})
+	</insert>
+  	
+  	
+  	
+<!-- 	select * from FREEBOARD where rownum >= #{baseRowNum} AND rownum <=  #{endRowNum} -->
+	    
+	<select id = "freeBoardList"  resultType = "com.bit.myapp.domain.FreeBoard">
+
+<!-- select postno, ptagname from freeboard where<![CDATA[]]  rownum >= #{baseRowNum} and rownum <= #{endRowNum} ]]> -->
+<!-- select postno, ptagname from freeboard -->
+	
+<!-- 	select * from freeboard where rownum <![CDATA[ >= ]]> #{pageNum} AND rownum <![CDATA[ <= ]]> #{contentNum} -->
+<!-- 	select * from freeboard where rownum <![CDATA[ >= ]]> #{pageNum} AND rownum <![CDATA[ <= ]]> #{contentNum} -->
+	<!-- select * from freeboard where rownum between #{baseNum} and #{endNum} order by postNo desc -->
+<!-- SELECT * FROM (SELECT ROWNUM AS RNUM, T.* FROM TABLE T) freeboard WHERE freeboard.RNUM between #{baseNum} and #{endNum}  -->
+	select * from ( select A.*, rownum as rnum, count(*) over() as totcnt from (select * from freeboard order by postno desc) A ) WHERE RNUM <![CDATA[ >= ]]> #{baseNum} and rnum <![CDATA[ <= ]]> #{endNum}
+<!-- SELECT  *FROM ( SELECT  A.*,  ROWNUM AS RNUM,  COUNT(*) OVER() AS TOTCNT FROM  (  SELECT *     FROM     freeboard   ORDER BY  postno desc ) A ) WHERE RNUM > 2 AND RNUM <= 10 -->
+
+	</select>
+
+	<select id = "postCount" resultType = "int">
+		select count(postno) from FREEBOARD
+<!--  			select postno from test where postno = 1 -->
+  </select>
+  
+  	<select id = "selectFree"  resultType = "com.bit.myapp.domain.FreeBoard" parameterType = "int">
+	select * from freeboard where postno = #{baseNum} 
+	</select>
+
+  
+  <delete id = "deleteFree"   parameterType = "int">
+  delete from freeBoard where postno = #{baseNum}
+  </delete>
+  
+  <update id = "updateFree" parameterType = "map">
+  update freeboard set ptagname= #{ptagName}, ptitle= #{ptitle}, pdetail= #{pdetail}, modidate = sysdate where postno= #{baseNum}
+<!--   update freeboard set ptagname= #{ptagName} where postno= #{baseNum} -->
+  </update>
+<!--    <update id = "updateFree" parameterType = "FreeBoard">
+  update freeboard set ptagname= #{ptagName}, ptitle= #{ptitle}, pdetail= #{pdetail}, modiDate = sysdate where postNo= #{postno}
+  </update> -->
+  
+  	<update id="freePlus" parameterType="int">
+		update freeboard
+		set postnv=postnv+1 where postno=#{baseNum}
+	</update>
+
+  
+  </mapper>

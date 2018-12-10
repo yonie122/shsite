@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bit.myapp.dao.CommentBoardDao">
+	<!-- 댓글 가져오기 -->
+	<select id="getAllComments"  parameterType="int" resultType="postComment">
+		SELECT * FROM COMMENTINFO where postno=#{postno} order by commentno ASC
+	</select>
+	
+	<!-- 댓글 삭제 -->
+	<delete id="deleteComment" parameterType="hashmap">
+		delete from
+		commentinfo where postno=#{postno} and commentno=#{commentno}
+	</delete>
+	
+	<!-- 댓글 입력 -->
+	<insert id="insertComment" parameterType="postComment">
+		insert into	commentinfo(COMMENTNO,CUSER,CDETAIL,POSTNO)
+		values(commentseq.nextval,#{cuser},#{cdetail},#{postno})
+	</insert>
+</mapper>

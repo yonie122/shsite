@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bit.myapp.dao.SearchBoardDao">
+	<!-- 전체 검색 -->
+	<select id="allSearchBoard" parameterType="string" resultType="Board">
+		SELECT * FROM ANONYMOUSBOARD
+		WHERE PDETAIL LIKE #{pTxt} OR PTITLE LIKE #{pTxt}
+	</select>
+</mapper>

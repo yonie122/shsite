@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bit.myapp.dao.AnonyBoardDao">
+	<!-- 새로운 글 등록 -->
+	<insert id="anonyinsertBoard" parameterType="Board">
+		INSERT INTO ANONYMOUSBOARD(POSTNO,PTAGNAME,PTITLE,PDETAIL,WRITER,IMGPATH)
+		VALUES(ANONYSEQ.NEXTVAL,'익명',#{ptitle},#{pdetail},'피카츄',#{imgpath})
+	</insert>
+	
+	<!-- 글 수정 -->
+	<update id="anonyModiBoard" parameterType="Board">
+		update ANONYMOUSBOARD
+		set ptagname='익명', ptitle=#{ptitle}, pdetail=#{pdetail},
+		modidate2=TO_CHAR(SYSDATE, 'yyyy/mm/dd/hh24:mi:ss')  where postno=#{postno}
+	</update>
+	
+	<delete id="anonydeleteBoard" parameterType="int">
+		delete from
+		anonymousboard where postno=#{postno}
+	</delete>
+	
+	<!-- 글목록 가져오기 -->
+	<select id="anonygetAllBoard" resultType="Board">
+		select * from anonymousboard order by postno desc
+	</select>
+	
+	<!-- 글번호에 맞는 정보 가져오기 -->
+	<select id="anonyselectBoard" parameterType="int"
+		resultType="Board">
+		select * from anonymousboard where postno=#{postno}
+	</select>
+	
+	<!-- 조회수 증가 -->
+	<update id="anonyPostnvPlus" parameterType="int">
+		update ANONYMOUSBOARD
+		set postnv=postnv+1 where postno=#{postno}
+	</update>
+	
+	<!-- 좋아요 증가 -->
+	<update id="anonyLikePlus" parameterType="int">
+		update ANONYMOUSBOARD
+		set likecount=likecount+1 where postno=#{postno}
+	</update>
+	
+</mapper>
